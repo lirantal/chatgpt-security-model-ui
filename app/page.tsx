@@ -12,24 +12,76 @@ export default function ChatGPTClone() {
   const timeoutRefs = useRef<Map<string, NodeJS.Timeout>>(new Map())
 
   const models = [
-    { name: "GPT-5", description: "" },
-    { name: "Auto", description: "Decides how long to think", selected: true },
-    { name: "Fast", description: "Instant answers" },
-    { name: "Thinking mini", description: "Thinks quickly" },
-    { name: "Thinking", description: "Thinks longer for better answers" },
-    { name: "Pro", description: "Research-grade intelligence" },
+    { name: "GPT-5", description: "", selected: true },
+    { name: "GPT-5 mini-secure", description: "Security for only high vulnerabilities" },
+    { name: "GPT-5 nano-secure", description: "Security for only medium vulnerabilities" },
+    { name: "GPT-5 o5", description: "Security reasoning via DMs to company ProdSec expert" },
+    { name: "GPT-5 o5 pro", description: "Security reasoning double-checked responses with Jim Manico" },
   ]
 
-  const legacyModels = ["GPT-4o", "GPT-4.1", "o3", "o4-mini"]
+  const legacyModels = [
+    "GPT-4o-security-ohh",
+    "GPT-4.1-off-by-one-protections",
+    "o3-redteam-bleeds",
+    "o4-mini-20%-vulnerabile",
+  ]
   const nestedMenuData = {
-    "more-models": ["GPT-3.5-turbo", "Claude-2", "PaLM-2", "Llama-2", "Advanced Models →"],
-    "level-1": ["Falcon-7B", "Vicuna-13B", "Alpaca-7B", "Dolly-12B", "Experimental Models →"],
-    "level-2": ["CodeT5-Base", "FLAN-T5", "UL2-20B", "GLM-130B", "Research Models →"],
-    "level-3": ["OPT-175B", "BLOOM-176B", "Megatron-530B", "Switch-1.6T", "Beta Models →"],
-    "level-4": ["InstructGPT", "WebGPT", "CodeX-12B", "Codegen-16B", "Alpha Models →"],
-    "level-5": ["T0pp-11B", "mT5-XXL", "BigScience-T0", "Anthropic-LM", "Prototype Models →"],
-    "level-6": ["PaLM-540B", "Chinchilla-70B", "Gopher-280B", "LaMDA-137B", "Experimental V2 →"],
-    "level-7": ["GPT-J-6B", "GPT-NeoX-20B", "RWKV-14B", "ChatGLM-6B", "Legacy Variants →"],
+    "more-models": [
+      "GPT-3.5-turbo-junk-code",
+      "Claude 2 secure 2 furious",
+      "Llama-3-security-free",
+      "Advanced Security-tuned LLMs →",
+    ],
+    "level-1": [
+      "Falcon-7B-no-SSRF",
+      "Vicuna-13B-no-CSRF",
+      "Alpaca-7B-no-XSS",
+      "Dolly-12B-no-HTML",
+      "Auth Security Models →",
+    ],
+    "level-2": [
+      "CodeT5-Base-no-broken-JWT",
+      "FLAN-T5-no-access-control",
+      "UL2-20B-no-control",
+      "GLM-130B-no-no-no",
+      "Security Design Models →",
+    ],
+    "level-3": [
+      "OPT-175B-XXE-protections",
+      "BLOOM-176B-insecure-by-design",
+      "Megatron-530B-insecure-no-design",
+      "Switch-1.6T-no-code",
+      "Dependency Security Models →",
+    ],
+    "level-4": [
+      "InstructGPT-no-third-party",
+      "WebGPT-no-thirds",
+      "CodeX-12B-no-party",
+      "Codegen-16B-no-components",
+      "CodeGPT-left-pad-hard",
+      "Cryptographic Security Models →",
+    ],
+    "level-5": [
+      "T0pp-11B-with-shamir",
+      "mT5-XXL-with-rivest-",
+      "BigScience-T0-with-adelman",
+      "Anthropic-LM-md5-best-security",
+      "Prototype Security Models →",
+    ],
+    "level-6": [
+      "PaLM-540B-prototype-pollution",
+      "Chinchilla-70B-prototype-poisoning",
+      "Gopher-280B-no-proto-no-cry",
+      "LaMDA-137B-no-js-objects",
+      "Injection Security Models SOTA →",
+    ],
+    "level-7": [
+      "GPT-J-6B-no-sql-injection",
+      "GPT-NeoX-20B-no-command-injection",
+      "RWKV-14B-no-input-injection",
+      "ChatGLM-6B-no-log-injection",
+      "Legacy Variants →",
+    ],
     "level-8": ["Jurassic-1", "Cohere-XL", "AI21-J1", "Anthropic-Claude", "Archive Models →"],
     "level-9": ["GPT-1", "GPT-2", "BERT-Large", "RoBERTa", "Final Archive →"],
     "level-10": ["Transformer-Base", "LSTM-Classic", "RNN-Original", "Perceptron-V1", "Historical Models"],
@@ -129,7 +181,7 @@ export default function ChatGPTClone() {
     return (
       <div
         ref={menuRef}
-        className={`absolute ${getPositionClasses()} bg-[#2f2f2f] rounded-lg border border-[#404040] shadow-lg z-50 min-w-[160px]`}
+        className={`absolute ${getPositionClasses()} bg-[#2f2f2f] rounded-lg border border-[#404040] shadow-lg z-50 w-80`}
         onMouseEnter={() => cancelClose(currentPath)}
         onMouseLeave={() => closeMenuWithDelay(currentPath)}
       >
@@ -141,7 +193,7 @@ export default function ChatGPTClone() {
             return (
               <div key={item} className="relative">
                 <div
-                  className="flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-[#404040] text-sm font-medium"
+                  className="flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-[#404040] text-base font-medium"
                   onMouseEnter={() => {
                     cancelClose(currentPath)
                     if (isNextLevelTrigger) {
@@ -199,7 +251,7 @@ export default function ChatGPTClone() {
 
           {/* Model Selection - Always Open */}
           <div className="bg-[#2f2f2f] rounded-lg p-3 mb-4">
-            <div className="text-sm text-gray-400 mb-2">GPT-5</div>
+            <div className="text-base text-gray-400 mb-2">GPT-5</div>
 
             <div className="space-y-1">
               {models.map((model) => (
@@ -211,8 +263,8 @@ export default function ChatGPTClone() {
                   onClick={() => setSelectedModel(model.name)}
                 >
                   <div>
-                    <div className="font-medium">{model.name}</div>
-                    {model.description && <div className="text-xs text-gray-400">{model.description}</div>}
+                    <div className="font-medium text-base">{model.name}</div>
+                    {model.description && <div className="text-sm text-gray-400">{model.description}</div>}
                   </div>
                   {model.selected && <div className="text-green-400">✓</div>}
                 </div>
@@ -221,8 +273,8 @@ export default function ChatGPTClone() {
               {/* Pro Upgrade Button */}
               <div className="flex items-center justify-between p-2">
                 <div>
-                  <div className="font-medium">Pro</div>
-                  <div className="text-xs text-gray-400">Research-grade intelligence</div>
+                  <div className="font-medium text-base">Pro</div>
+                  <div className="text-sm text-gray-400">Research-grade intelligence</div>
                 </div>
                 <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 text-xs">
                   Upgrade
@@ -238,14 +290,14 @@ export default function ChatGPTClone() {
                   }}
                   onMouseLeave={() => closeMenuWithDelay(["legacy"])}
                 >
-                  <span className="font-medium">Legacy models</span>
+                  <span className="font-medium text-base">Legacy models</span>
                   <ChevronRight className="w-4 h-4" />
                 </div>
 
                 {isMenuOpen("legacy") && (
                   <div
                     ref={legacyMenuRef}
-                    className={`absolute ${getLegacyPositionClasses()} bg-[#2f2f2f] rounded-lg border border-[#404040] shadow-lg z-50 min-w-[160px]`}
+                    className={`absolute ${getLegacyPositionClasses()} bg-[#2f2f2f] rounded-lg border border-[#404040] shadow-lg z-50 w-80`}
                     onMouseEnter={() => cancelClose(["legacy"])}
                     onMouseLeave={() => closeMenuWithDelay(["legacy"])}
                   >
@@ -253,7 +305,7 @@ export default function ChatGPTClone() {
                       {legacyModels.map((model) => (
                         <div
                           key={model}
-                          className="p-2 rounded-md cursor-pointer hover:bg-[#404040] text-sm font-medium"
+                          className="p-2 rounded-md cursor-pointer hover:bg-[#404040] text-base font-medium"
                           onMouseEnter={() => cancelClose(["legacy"])}
                           onClick={() => {
                             setSelectedModel(model)
@@ -267,7 +319,7 @@ export default function ChatGPTClone() {
                       {/* More models option with nested submenu */}
                       <div className="relative">
                         <div
-                          className="flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-[#404040] text-sm font-medium"
+                          className="flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-[#404040] text-base font-medium"
                           onMouseEnter={() => {
                             cancelClose(["legacy", "more-models"])
                             openMenu(["legacy", "more-models"])
@@ -300,11 +352,11 @@ export default function ChatGPTClone() {
           <div className="space-y-2">
             <div className="flex items-center gap-3 p-2 rounded-md hover:bg-[#2f2f2f] cursor-pointer">
               <Settings className="w-4 h-4" />
-              <span className="text-sm">Settings</span>
+              <span className="text-base">Settings</span>
             </div>
             <div className="flex items-center gap-3 p-2 rounded-md hover:bg-[#2f2f2f] cursor-pointer">
               <HelpCircle className="w-4 h-4" />
-              <span className="text-sm">Help</span>
+              <span className="text-base">Help</span>
             </div>
           </div>
         </div>
@@ -315,8 +367,9 @@ export default function ChatGPTClone() {
         {/* Top Header */}
         <div className="flex items-center justify-between p-4 border-b border-[#2f2f2f]">
           <div className="flex items-center gap-2">
-            <span className="font-semibold">ChatGPT</span>
+            {/* <span className="font-semibold">ChatGPT</span>
             <ChevronDown className="w-4 h-4" />
+            */}
           </div>
           <Button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2">
             <span className="mr-2">✨</span>
