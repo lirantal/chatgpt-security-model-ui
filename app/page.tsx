@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ChevronDown, ChevronRight, Mic, Send, Plus, Search, MessageSquare, Settings, HelpCircle } from "lucide-react"
+import { ChevronDown, ChevronRight, Mic, Send, Plus, Settings, HelpCircle } from "lucide-react"
 
 export default function ChatGPTClone() {
   const [selectedModel, setSelectedModel] = useState("Auto")
@@ -293,23 +293,7 @@ export default function ChatGPTClone() {
         </div>
 
         {/* Navigation Items */}
-        <div className="flex-1 p-4">
-          <Button className="w-full justify-start mb-4 bg-transparent hover:bg-[#2f2f2f] border border-[#404040]">
-            <Plus className="w-4 h-4 mr-2" />
-            New chat
-          </Button>
-
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 p-2 rounded-md hover:bg-[#2f2f2f] cursor-pointer">
-              <Search className="w-4 h-4" />
-              <span className="text-sm">Search</span>
-            </div>
-            <div className="flex items-center gap-3 p-2 rounded-md hover:bg-[#2f2f2f] cursor-pointer">
-              <MessageSquare className="w-4 h-4" />
-              <span className="text-sm">Recent chats</span>
-            </div>
-          </div>
-        </div>
+        <div className="flex-1 p-4"></div>
 
         {/* Bottom Navigation */}
         <div className="p-4 border-t border-[#2f2f2f]">
