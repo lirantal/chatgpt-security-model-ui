@@ -170,6 +170,22 @@ export default function ChatGPTClone() {
     const { position, menuRef } = useSmartPosition(isMenuOpen(menuKey))
     const currentPath = [...parentPath, menuKey]
 
+    const getBackgroundColor = () => {
+      const colors = [
+        "bg-[#2f2f2f]", // Level 1 - Dark gray (original)
+        "bg-slate-700", // Level 2 - Slate
+        "bg-gray-600", // Level 3 - Gray
+        "bg-blue-800", // Level 4 - Blue
+        "bg-indigo-700", // Level 5 - Indigo
+        "bg-purple-700", // Level 6 - Purple
+        "bg-violet-700", // Level 7 - Violet
+        "bg-pink-700", // Level 8 - Pink
+        "bg-rose-700", // Level 9 - Rose
+        "bg-red-700", // Level 10 - Red
+      ]
+      return colors[level - 1] || "bg-[#2f2f2f]"
+    }
+
     const getPositionClasses = () => {
       const horizontal = position.horizontal === "left" ? "right-full mr-2" : "left-full ml-2"
       const vertical = position.vertical === "bottom" ? "bottom-0" : "top-0"
@@ -181,7 +197,7 @@ export default function ChatGPTClone() {
     return (
       <div
         ref={menuRef}
-        className={`absolute ${getPositionClasses()} bg-[#2f2f2f] rounded-lg border border-[#404040] shadow-lg z-50 w-80`}
+        className={`absolute ${getPositionClasses()} ${getBackgroundColor()} rounded-lg border border-[#404040] shadow-lg z-50 w-80`}
         onMouseEnter={() => cancelClose(currentPath)}
         onMouseLeave={() => closeMenuWithDelay(currentPath)}
       >
@@ -297,7 +313,7 @@ export default function ChatGPTClone() {
                 {isMenuOpen("legacy") && (
                   <div
                     ref={legacyMenuRef}
-                    className={`absolute ${getLegacyPositionClasses()} bg-[#2f2f2f] rounded-lg border border-[#404040] shadow-lg z-50 w-80`}
+                    className={`absolute ${getLegacyPositionClasses()} bg-slate-800 rounded-lg border border-[#404040] shadow-lg z-50 w-80`}
                     onMouseEnter={() => cancelClose(["legacy"])}
                     onMouseLeave={() => closeMenuWithDelay(["legacy"])}
                   >
