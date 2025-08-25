@@ -15,71 +15,66 @@ export default function ChatGPTClone() {
     { name: "GPT-5", description: "", selected: true },
     { name: "GPT-5 mini-secure", description: "Security for only high vulnerabilities" },
     { name: "GPT-5 nano-secure", description: "Security for only medium vulnerabilities" },
-    { name: "GPT-5 o5", description: "Security reasoning via DMs to company ProdSec expert" },
+    //{ name: "GPT-5 o5", description: "Security reasoning via DMs to company ProdSec expert" },
     { name: "GPT-5 o5 pro", description: "Security reasoning double-checked responses with Jim Manico" },
   ]
 
-  const legacyModels = [
-    "GPT-4o-security-ohh",
-    "GPT-4.1-off-by-one-protections",
-    "o3-redteam-bleeds",
-    "o4-mini-20%-vulnerabile",
-  ]
+  const legacyModels = ["GPT-4o-Security-Ohhh", "GPT-4.1-Off-By-One-Protections", "o3-Redteam-Bleeds"]
   const nestedMenuData = {
     "more-models": [
-      "GPT-3.5-turbo-junk-code",
-      "Claude 2 secure 2 furious",
-      "Llama-3-security-free",
-      "Advanced Security-tuned LLMs →",
+      "GPT-3.5-Turbo-Junk-Code",
+      "Claude 2 Secure 2 Furious",
+      "Llama-3-Security-Free",
+      "Advanced Security-Tuned LLMs →",
     ],
     "level-1": [
-      "Falcon-7B-no-SSRF",
-      "Vicuna-13B-no-CSRF",
-      "Alpaca-7B-no-XSS",
-      "Dolly-12B-no-HTML",
+      "Falcon-7B-No-SSRF",
+      "Vicuna-13B-No-CSRF",
+      "Alpaca-7B-No-XSS",
+      "Dolly-12B-No-HTML",
       "Auth Security Models →",
     ],
     "level-2": [
-      "CodeT5-Base-no-broken-JWT",
-      "FLAN-T5-no-access-control",
-      "UL2-20B-no-control",
-      "GLM-130B-no-no-no",
+      "CodeT5-Base-No-Broken-JWT",
+      "FLAN-T5-No-Access-Control",
+      "UL2-20B-No-Control",
+      "GLM-130B-No-No-No",
       "Security Design Models →",
     ],
     "level-3": [
-      "OPT-175B-XXE-protections",
-      "BLOOM-176B-insecure-by-design",
-      "Megatron-530B-insecure-no-design",
-      "Switch-1.6T-no-code",
+      "OPT-175B-XXE-Protections",
+      "BLOOM-176B-Insecure-By-Design",
+      "Megatron-530B-Insecure-No-Design",
+      "Switch-1.6T-No-Code",
       "Dependency Security Models →",
     ],
     "level-4": [
-      "InstructGPT-no-third-party",
-      "WebGPT-no-thirds",
-      "CodeX-12B-no-party",
-      "Codegen-16B-no-components",
-      "CodeGPT-left-pad-hard",
+      "InstructGPT-No-Third-Party",
+      "WebGPT-No-Thirds",
+      "CodeX-12B-No-Party",
+      "Codegen-16B-No-Components",
+      "CodeGPT-Left-Pad-Hard",
       "Cryptographic Security Models →",
     ],
     "level-5": [
-      "T0pp-11B-with-shamir",
-      "mT5-XXL-with-rivest-",
-      "BigScience-T0-with-adelman",
-      "Anthropic-LM-md5-best-security",
+      "T0pp-11B-With-Shamir",
+      "mT5-XXL-With-Rivest-",
+      "BigScience-T0-With-Adelman",
+      "Anthropic-LM-Md5-Best-Security",
       "Prototype Security Models →",
     ],
     "level-6": [
-      "PaLM-540B-prototype-pollution",
-      "Chinchilla-70B-prototype-poisoning",
-      "Gopher-280B-no-proto-no-cry",
-      "LaMDA-137B-no-js-objects",
+      "PaLM-540B-Prototype-Pollution",
+      "Chinchilla-70B-Prototype-Poisoning",
+      "Gopher-280B-No-Proto-No-Cry",
+      "LaMDA-137B-No-Js-Objects",
       "Injection Security Models SOTA →",
     ],
     "level-7": [
-      "GPT-J-6B-no-sql-injection",
-      "GPT-NeoX-20B-no-command-injection",
-      "RWKV-14B-no-input-injection",
-      "ChatGLM-6B-no-log-injection",
+      "GPT-J-6B-No-Sql-Injection",
+      "GPT-NeoX-20B-No-Command-Injection",
+      "RWKV-14B-No-Input-Injection",
+      "ChatGLM-6B-No-Log-Injection",
       "Legacy Variants →",
     ],
     "level-8": ["Jurassic-1", "Cohere-XL", "AI21-J1", "Anthropic-Claude", "Archive Models →"],
@@ -133,7 +128,7 @@ export default function ChatGPTClone() {
     return menuPath.includes(menuKey)
   }
 
-  const useSmartPosition = (isOpen: boolean) => {
+  const useSmartPosition = (isOpen: boolean, level = 0) => {
     const [position, setPosition] = useState({ horizontal: "right", vertical: "top" })
     const menuRef = useRef<HTMLDivElement>(null)
 
@@ -145,7 +140,21 @@ export default function ChatGPTClone() {
 
         const spaceRight = viewportWidth - rect.right
         const spaceLeft = rect.left
-        const horizontal = spaceRight < 200 && spaceLeft > 200 ? "left" : "right"
+
+        // Use larger threshold for early levels, smaller for deeper levels
+        const spaceThreshold = level <= 2 ? 350 : level <= 4 ? 280 : 200
+
+        // Determine preferred direction based on level (alternating)
+        const preferRight = level % 2 === 0
+
+        let horizontal: string
+        if (preferRight) {
+          // Try right first, fallback to left if no space
+          horizontal = spaceRight >= spaceThreshold ? "right" : "left"
+        } else {
+          // Try left first, fallback to right if no space
+          horizontal = spaceLeft >= spaceThreshold ? "left" : "right"
+        }
 
         const spaceBelow = viewportHeight - rect.top
         const spaceAbove = rect.top
@@ -153,7 +162,7 @@ export default function ChatGPTClone() {
 
         setPosition({ horizontal, vertical })
       }
-    }, [isOpen])
+    }, [isOpen, level])
 
     return { position, menuRef }
   }
@@ -167,7 +176,7 @@ export default function ChatGPTClone() {
     const nextMenuKey = `level-${level}`
     const hasNextLevel = level < 10
     const nextLevelItems = hasNextLevel ? nestedMenuData[nextMenuKey] : []
-    const { position, menuRef } = useSmartPosition(isMenuOpen(menuKey))
+    const { position, menuRef } = useSmartPosition(isMenuOpen(menuKey), level)
     const currentPath = [...parentPath, menuKey]
 
     const getBackgroundColor = () => {
@@ -243,7 +252,7 @@ export default function ChatGPTClone() {
     )
   }
 
-  const { position: legacyPosition, menuRef: legacyMenuRef } = useSmartPosition(isMenuOpen("legacy"))
+  const { position: legacyPosition, menuRef: legacyMenuRef } = useSmartPosition(isMenuOpen("legacy"), 0)
 
   const getLegacyPositionClasses = () => {
     const horizontal = legacyPosition.horizontal === "left" ? "right-full mr-2" : "left-full ml-2"
@@ -263,6 +272,66 @@ export default function ChatGPTClone() {
             </div>
             <span className="font-semibold">ChatGPT</span>
             <ChevronDown className="w-4 h-4 ml-auto" />
+          </div>
+
+          <div className="relative mb-4">
+            <div
+              className="flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-[#2f2f2f] bg-[#2f2f2f]"
+              onMouseEnter={() => {
+                cancelClose(["legacy"])
+                openMenu(["legacy"])
+              }}
+              onMouseLeave={() => closeMenuWithDelay(["legacy"])}
+            >
+              <span className="font-medium text-base">Other models</span>
+              <ChevronRight className="w-4 h-4" />
+            </div>
+
+            {isMenuOpen("legacy") && (
+              <div
+                ref={legacyMenuRef}
+                className={`absolute ${getLegacyPositionClasses()} bg-slate-800 rounded-lg border border-[#404040] shadow-lg z-50 w-80`}
+                onMouseEnter={() => cancelClose(["legacy"])}
+                onMouseLeave={() => closeMenuWithDelay(["legacy"])}
+              >
+                <div className="p-2 space-y-1">
+                  {legacyModels.map((model) => (
+                    <div
+                      key={model}
+                      className="p-2 rounded-md cursor-pointer hover:bg-[#404040] text-base font-medium"
+                      onMouseEnter={() => cancelClose(["legacy"])}
+                      onClick={() => {
+                        setSelectedModel(model)
+                        setMenuPath([])
+                      }}
+                    >
+                      {model}
+                    </div>
+                  ))}
+
+                  {/* More models option with nested submenu */}
+                  <div className="relative">
+                    <div
+                      className="flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-[#404040] text-base font-medium"
+                      onMouseEnter={() => {
+                        cancelClose(["legacy", "more-models"])
+                        openMenu(["legacy", "more-models"])
+                      }}
+                    >
+                      <span>More models</span>
+                      <ChevronRight className="w-3 h-3" />
+                    </div>
+
+                    <NestedSubmenu
+                      level={1}
+                      menuKey="more-models"
+                      items={nestedMenuData["more-models"]}
+                      parentPath={["legacy"]}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Model Selection - Always Open */}
@@ -285,77 +354,6 @@ export default function ChatGPTClone() {
                   {model.selected && <div className="text-green-400">✓</div>}
                 </div>
               ))}
-
-              {/* Pro Upgrade Button */}
-              <div className="flex items-center justify-between p-2">
-                <div>
-                  <div className="font-medium text-base">Pro</div>
-                  <div className="text-sm text-gray-400">Research-grade intelligence</div>
-                </div>
-                <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 text-xs">
-                  Upgrade
-                </Button>
-              </div>
-
-              <div className="relative">
-                <div
-                  className="flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-[#404040]"
-                  onMouseEnter={() => {
-                    cancelClose(["legacy"])
-                    openMenu(["legacy"])
-                  }}
-                  onMouseLeave={() => closeMenuWithDelay(["legacy"])}
-                >
-                  <span className="font-medium text-base">Legacy models</span>
-                  <ChevronRight className="w-4 h-4" />
-                </div>
-
-                {isMenuOpen("legacy") && (
-                  <div
-                    ref={legacyMenuRef}
-                    className={`absolute ${getLegacyPositionClasses()} bg-slate-800 rounded-lg border border-[#404040] shadow-lg z-50 w-80`}
-                    onMouseEnter={() => cancelClose(["legacy"])}
-                    onMouseLeave={() => closeMenuWithDelay(["legacy"])}
-                  >
-                    <div className="p-2 space-y-1">
-                      {legacyModels.map((model) => (
-                        <div
-                          key={model}
-                          className="p-2 rounded-md cursor-pointer hover:bg-[#404040] text-base font-medium"
-                          onMouseEnter={() => cancelClose(["legacy"])}
-                          onClick={() => {
-                            setSelectedModel(model)
-                            setMenuPath([])
-                          }}
-                        >
-                          {model}
-                        </div>
-                      ))}
-
-                      {/* More models option with nested submenu */}
-                      <div className="relative">
-                        <div
-                          className="flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-[#404040] text-base font-medium"
-                          onMouseEnter={() => {
-                            cancelClose(["legacy", "more-models"])
-                            openMenu(["legacy", "more-models"])
-                          }}
-                        >
-                          <span>More models</span>
-                          <ChevronRight className="w-3 h-3" />
-                        </div>
-
-                        <NestedSubmenu
-                          level={1}
-                          menuKey="more-models"
-                          items={nestedMenuData["more-models"]}
-                          parentPath={["legacy"]}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>
