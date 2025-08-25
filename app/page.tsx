@@ -181,7 +181,8 @@ export default function ChatGPTClone() {
     const nextMenuKey = `level-${level}`
     const hasNextLevel = level < 10
     const nextLevelItems = hasNextLevel ? nestedMenuData[nextMenuKey] : []
-    const { position, menuRef } = useSmartPosition(isMenuOpen(menuKey), level, menuKey === "more-models")
+    const forceRight = menuKey === "more-models" || menuKey === "level-1"
+    const { position, menuRef } = useSmartPosition(isMenuOpen(menuKey), level, forceRight)
     const currentPath = [...parentPath, menuKey]
 
     const getBackgroundColor = () => {
