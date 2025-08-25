@@ -142,7 +142,7 @@ export default function ChatGPTClone() {
         const spaceLeft = rect.left
 
         // Use larger threshold for early levels, smaller for deeper levels
-        const spaceThreshold = level <= 2 ? 350 : level <= 3 ? 280 : 200
+        const spaceThreshold = level <= 1 ? 350 : level <= 2 ? 280 : 100
 
         let horizontal: string
         if (forceRight) {
@@ -150,7 +150,7 @@ export default function ChatGPTClone() {
           horizontal = spaceRight >= spaceThreshold ? "right" : "left"
         } else {
           // Determine preferred direction based on level (alternating)
-          const preferRight = level % 2 === 0
+          const preferRight = level % 3 === 0
 
           if (preferRight) {
             // Try right first, fallback to left if no space
