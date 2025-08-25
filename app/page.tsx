@@ -142,7 +142,7 @@ export default function ChatGPTClone() {
         const spaceLeft = rect.left
 
         // Use larger threshold for early levels, smaller for deeper levels
-        const spaceThreshold = level <= 2 ? 350 : level <= 4 ? 280 : 200
+        const spaceThreshold = level <= 2 ? 350 : level <= 3 ? 280 : 200
 
         let horizontal: string
         if (forceRight) {
