@@ -128,7 +128,7 @@ export default function ChatGPTClone() {
     return menuPath.includes(menuKey)
   }
 
-  const useSmartPosition = (isOpen: boolean, level = 0) => {
+  const useSmartPosition = (isOpen: boolean, level = 0, forceRight = false) => {
     const [position, setPosition] = useState({ horizontal: "right", vertical: "top" })
     const menuRef = useRef<HTMLDivElement>(null)
 
@@ -144,16 +144,21 @@ export default function ChatGPTClone() {
         // Use larger threshold for early levels, smaller for deeper levels
         const spaceThreshold = level <= 2 ? 350 : level <= 4 ? 280 : 200
 
-        // Determine preferred direction based on level (alternating)
-        const preferRight = level % 2 === 0
-
         let horizontal: string
-        if (preferRight) {
-          // Try right first, fallback to left if no space
+        if (forceRight) {
+          // Always prefer right for More models submenu
           horizontal = spaceRight >= spaceThreshold ? "right" : "left"
         } else {
-          // Try left first, fallback to right if no space
-          horizontal = spaceLeft >= spaceThreshold ? "left" : "right"
+          // Determine preferred direction based on level (alternating)
+          const preferRight = level % 2 === 0
+
+          if (preferRight) {
+            // Try right first, fallback to left if no space
+            horizontal = spaceRight >= spaceThreshold ? "right" : "left"
+          } else {
+            // Try left first, fallback to right if no space
+            horizontal = spaceLeft >= spaceThreshold ? "left" : "right"
+          }
         }
 
         const spaceBelow = viewportHeight - rect.top
@@ -162,7 +167,7 @@ export default function ChatGPTClone() {
 
         setPosition({ horizontal, vertical })
       }
-    }, [isOpen, level])
+    }, [isOpen, level, forceRight])
 
     return { position, menuRef }
   }
@@ -176,7 +181,7 @@ export default function ChatGPTClone() {
     const nextMenuKey = `level-${level}`
     const hasNextLevel = level < 10
     const nextLevelItems = hasNextLevel ? nestedMenuData[nextMenuKey] : []
-    const { position, menuRef } = useSmartPosition(isMenuOpen(menuKey), level)
+    const { position, menuRef } = useSmartPosition(isMenuOpen(menuKey), level, menuKey === "more-models")
     const currentPath = [...parentPath, menuKey]
 
     const getBackgroundColor = () => {
