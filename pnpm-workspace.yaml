@@ -22,6 +22,8 @@ allowBuilds:
   esbuild: true
   rolldown: true
   unrs-resolver: true
+  '@tailwindcss/oxide': true
+  sharp: true
 
 # Strictly enforce build dependencies, otherwise pnpm will error
 strictDepBuilds: true
